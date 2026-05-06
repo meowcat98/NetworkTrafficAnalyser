@@ -1,0 +1,72 @@
+
+=== Session ended: 2026-05-05 17:24:06 ===
+2026-05-05 17:03:12
+⚠️ TRAFFIC ALERT: Abnormal packet rate detected
+Source: 35.186.247.105
+Rate: 151 packets/second (threshold: 150 pps)
+Risk: May indicate bandwidth abuse, DDoS, or data exfiltration
+Action: Monitor for sustained high traffic patterns
+
+2026-05-05 17:20:50
+⚠️ SECURITY ALERT: Potential port scan detected
+Source: 194.81.203.50
+Activity: 86 unique ports contacted in 5 seconds
+Risk: This behavior may indicate network reconnaissance
+Action: Investigate source device for unauthorized scanning tools
+
+2026-05-05 17:21:21
+⚠️ SECURITY ALERT: Potential port scan detected
+Source: 194.81.203.50
+Activity: 119 unique ports contacted in 5 seconds
+Risk: This behavior may indicate network reconnaissance
+Action: Investigate source device for unauthorized scanning tools
+
+2026-05-05 17:21:51
+⚠️ SECURITY ALERT: Potential port scan detected
+Source: 194.81.203.50
+Activity: 124 unique ports contacted in 5 seconds
+Risk: This behavior may indicate network reconnaissance
+Action: Investigate source device for unauthorized scanning tools
+
+2026-05-05 17:22:22
+⚠️ SECURITY ALERT: Potential port scan detected
+Source: 194.81.203.50
+Activity: 150 unique ports contacted in 5 seconds
+Risk: This behavior may indicate network reconnaissance
+Action: Investigate source device for unauthorized scanning tools
+
+2026-05-05 17:22:45
+⚠️ TRAFFIC ALERT: Abnormal packet rate detected
+Source: 10.8.40.86
+Rate: 151 packets/second (threshold: 150 pps)
+Risk: May indicate bandwidth abuse, DDoS, or data exfiltration
+Action: Monitor for sustained high traffic patterns
+
+2026-05-05 17:22:53
+⚠️ SECURITY ALERT: Potential port scan detected
+Source: 194.81.203.50
+Activity: 172 unique ports contacted in 5 seconds
+Risk: This behavior may indicate network reconnaissance
+Action: Investigate source device for unauthorized scanning tools
+
+2026-05-05 17:22:56
+⚠️ TRAFFIC ALERT: Abnormal packet rate detected
+Source: 35.186.247.105
+Rate: 151 packets/second (threshold: 150 pps)
+Risk: May indicate bandwidth abuse, DDoS, or data exfiltration
+Action: Monitor for sustained high traffic patterns
+
+2026-05-05 17:23:33
+⚠️ SECURITY ALERT: Potential port scan detected
+Source: 194.81.203.50
+Activity: 181 unique ports contacted in 5 seconds
+Risk: This behavior may indicate network reconnaissance
+Action: Investigate source device for unauthorized scanning tools
+
+2026-05-05 17:23:54
+⚠️ TRAFFIC ALERT: Abnormal packet rate detected
+Source: 35.186.247.105
+Rate: 151 packets/second (threshold: 150 pps)
+Risk: May indicate bandwidth abuse, DDoS, or data exfiltration
+Action: Monitor for sustained high traffic patterns
+

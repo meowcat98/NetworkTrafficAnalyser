@@ -1,0 +1,23 @@
+
+=== Session ended: 2026-05-01 23:34:17 ===
+2026-05-01 23:34:09
+⚠️ TRAFFIC ALERT: Abnormal packet rate detected
+Source: 35.186.247.105
+Rate: 151 packets/second (threshold: 150 pps)
+Risk: May indicate bandwidth abuse, DDoS, or data exfiltration
+Action: Monitor for sustained high traffic patterns
+
+2026-05-01 23:34:13
+⚠️ TRAFFIC ALERT: Abnormal packet rate detected
+Source: 192.168.0.42
+Rate: 151 packets/second (threshold: 150 pps)
+Risk: May indicate bandwidth abuse, DDoS, or data exfiltration
+Action: Monitor for sustained high traffic patterns
+
+2026-05-01 23:34:16
+⚠️ TRAFFIC ALERT: Abnormal packet rate detected
+Source: 13.107.137.11
+Rate: 151 packets/second (threshold: 150 pps)
+Risk: May indicate bandwidth abuse, DDoS, or data exfiltration
+Action: Monitor for sustained high traffic patterns
+

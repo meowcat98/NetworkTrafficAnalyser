@@ -1,0 +1,5 @@
+.claude/
+.sixth/
+.venv/
+__pycache__/
+*.pcap
