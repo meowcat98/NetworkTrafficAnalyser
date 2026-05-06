@@ -1619,242 +1619,242 @@ if __name__ == '__main__':
 
     # ---------- run ----------
     fig = plt.figure(figsize=(CONFIG['display']['window_width'], CONFIG['display']['window_height']))
-fig.patch.set_facecolor(DARK_BG)
+    fig.patch.set_facecolor(DARK_BG)
 
-# global structures for hover tooltips on charts
-bar_collections = []  # list of tuples (orientation, ax, bars, labels)
-hover_annot = None
-hover_annot_ax = None
-tooltip_state = {"pinned": False}
+    # global structures for hover tooltips on charts
+    bar_collections = []  # list of tuples (orientation, ax, bars, labels)
+    hover_annot = None
+    hover_annot_ax = None
+    tooltip_state = {"pinned": False}
 
-# global placeholders for sniffer/control state
-sniffer = None
-capturing = False
-capture_state = "CAPTURING"
+    # global placeholders for sniffer/control state
+    sniffer = None
+    capturing = False
+    capture_state = "CAPTURING"
 
-# Allow closing the dashboard with 'q' or 'escape' key
-def _on_key(event):
-    global current_theme, capturing, capture_state, about_overlay_visible
-    try:
-        key = (event.key or "").lower()
-        if about_overlay_visible and key != 'a':
-            about_overlay_visible = False
-            fig.canvas.draw_idle()
-            return
-        if key in ('q', 'escape'):
-            plt.close(fig)
-        elif key == 'a':
-            about_overlay_visible = not about_overlay_visible
-            fig.canvas.draw_idle()
-        elif key == 't':
-            current_theme = 'light' if current_theme == 'dark' else 'dark'
-            console_action(f"🌅 Theme switched to: {current_theme.upper()}")
-            fig.canvas.draw_idle()
-        elif key == 'p':
-            capturing = not capturing
-            capture_state = "PAUSED" if not capturing else "CAPTURING"
-            console_action("⏸️  Capture PAUSED" if not capturing else "▶️  Capture RESUMED")
-            try:
+    # Allow closing the dashboard with 'q' or 'escape' key
+    def _on_key(event):
+        global current_theme, capturing, capture_state, about_overlay_visible
+        try:
+            key = (event.key or "").lower()
+            if about_overlay_visible and key != 'a':
+                about_overlay_visible = False
                 fig.canvas.draw_idle()
-            except Exception:
-                pass
-        elif key == 'c':
-            reset_runtime_state(clear_alert_state=True)
-            console_action("🔄 Data CLEARED - Starting fresh")
-            try:
+                return
+            if key in ('q', 'escape'):
+                plt.close(fig)
+            elif key == 'a':
+                about_overlay_visible = not about_overlay_visible
                 fig.canvas.draw_idle()
-            except Exception:
-                pass
-        elif key == 'r':
-            reset_statistics()
-            try:
+            elif key == 't':
+                current_theme = 'light' if current_theme == 'dark' else 'dark'
+                console_action(f"🌅 Theme switched to: {current_theme.upper()}")
                 fig.canvas.draw_idle()
-            except Exception:
-                pass
-        elif key == 's':
-            screenshot_path = save_screenshot()
-            console_action(f"📸 Screenshot saved: {screenshot_path}")
-        elif key == 'e':
-            exported = export_current_data()
-            if exported:
-                exported_names = [os.path.basename(path) for path in exported]
-                if any(name.startswith("live_packets_") for name in exported_names):
-                    console_action(f"💾 Exported CSV: {next(name for name in exported_names if name.startswith('live_packets_'))}")
-                if any(name.startswith("live_capture_") for name in exported_names):
-                    console_action(f"💾 Exported PCAP: {next(name for name in exported_names if name.startswith('live_capture_'))}")
-                if any(name.startswith("security_alerts_") for name in exported_names):
-                    console_action(f"💾 Exported Alerts: {next(name for name in exported_names if name.startswith('security_alerts_'))}")
-            else:
-                console_action("💾 Data export skipped - no live files available")
-    except Exception:
-        pass
-
-fig.canvas.mpl_connect('key_press_event', _on_key)
-
-# attach hover callback once; callback will reference bar_collections
-annotations = {}
-
-def _on_hover(event):
-    if event.inaxes is None:
-        hide_hover_annotation()
-        return
-
-    theme = get_theme()
-    ax = event.inaxes
-
-    for orient, a, bars, labels in bar_collections:
-        if a is not ax:
-            continue
-        for i, bar in enumerate(bars):
-            contains, _ = bar.contains(event)
-            if not contains:
-                continue
-
-            count = int(round(bar.get_width() if orient == "h" else bar.get_height()))
-            label = labels[i] if labels and i < len(labels) else ""
-            total = sum(source_counts.values()) if a is ax1 else sum(dest_counts.values()) if a is ax2 else sum(port_counts.values())
-            pct = (count / total * 100.0) if total else 0.0
-
-            if a is ax1 or a is ax2:
-                text = f"IP: {label} | Packets: {count:,} ({pct:.1f}% of total)"
-            else:
-                if label in SERVICE.values() or label.isdigit():
-                    text = f"Port {label}: {count:,} packets"
+            elif key == 'p':
+                capturing = not capturing
+                capture_state = "PAUSED" if not capturing else "CAPTURING"
+                console_action("⏸️  Capture PAUSED" if not capturing else "▶️  Capture RESUMED")
+                try:
+                    fig.canvas.draw_idle()
+                except Exception:
+                    pass
+            elif key == 'c':
+                reset_runtime_state(clear_alert_state=True)
+                console_action("🔄 Data CLEARED - Starting fresh")
+                try:
+                    fig.canvas.draw_idle()
+                except Exception:
+                    pass
+            elif key == 'r':
+                reset_statistics()
+                try:
+                    fig.canvas.draw_idle()
+                except Exception:
+                    pass
+            elif key == 's':
+                screenshot_path = save_screenshot()
+                console_action(f"📸 Screenshot saved: {screenshot_path}")
+            elif key == 'e':
+                exported = export_current_data()
+                if exported:
+                    exported_names = [os.path.basename(path) for path in exported]
+                    if any(name.startswith("live_packets_") for name in exported_names):
+                        console_action(f"💾 Exported CSV: {next(name for name in exported_names if name.startswith('live_packets_'))}")
+                    if any(name.startswith("live_capture_") for name in exported_names):
+                        console_action(f"💾 Exported PCAP: {next(name for name in exported_names if name.startswith('live_capture_'))}")
+                    if any(name.startswith("security_alerts_") for name in exported_names):
+                        console_action(f"💾 Exported Alerts: {next(name for name in exported_names if name.startswith('security_alerts_'))}")
                 else:
-                    text = f"{label}: {count:,} packets"
+                    console_action("💾 Data export skipped - no live files available")
+        except Exception:
+            pass
 
-            show_hover_annotation(a, text, (event.xdata, event.ydata))
+    fig.canvas.mpl_connect('key_press_event', _on_key)
+
+    # attach hover callback once; callback will reference bar_collections
+    annotations = {}
+
+    def _on_hover(event):
+        if event.inaxes is None:
+            hide_hover_annotation()
             return
 
-    if ax is ax3 and protocol_counts:
-        for wedge, proto, count in zip(ax.patches, protocol_counts.keys(), protocol_counts.values()):
-            contains, _ = wedge.contains(event)
-            if contains:
-                total = sum(protocol_counts.values())
+        theme = get_theme()
+        ax = event.inaxes
+
+        for orient, a, bars, labels in bar_collections:
+            if a is not ax:
+                continue
+            for i, bar in enumerate(bars):
+                contains, _ = bar.contains(event)
+                if not contains:
+                    continue
+
+                count = int(round(bar.get_width() if orient == "h" else bar.get_height()))
+                label = labels[i] if labels and i < len(labels) else ""
+                total = sum(source_counts.values()) if a is ax1 else sum(dest_counts.values()) if a is ax2 else sum(port_counts.values())
                 pct = (count / total * 100.0) if total else 0.0
-                show_hover_annotation(ax, f"{proto}: {count:,} packets ({pct:.1f}%)", (event.xdata, event.ydata))
+
+                if a is ax1 or a is ax2:
+                    text = f"IP: {label} | Packets: {count:,} ({pct:.1f}% of total)"
+                else:
+                    if label in SERVICE.values() or label.isdigit():
+                        text = f"Port {label}: {count:,} packets"
+                    else:
+                        text = f"{label}: {count:,} packets"
+
+                show_hover_annotation(a, text, (event.xdata, event.ydata))
                 return
 
-    if ax is ax4 and (pps_history or mbps_history):
-        if event.xdata is not None:
-            idx = int(round(event.xdata))
-            idx = max(0, min(idx, max(len(pps_history), len(mbps_history)) - 1))
-            if idx < len(pps_history) or idx < len(mbps_history):
-                pps_val = pps_history[idx] if idx < len(pps_history) else 0.0
-                mbps_val = mbps_history[idx] if idx < len(mbps_history) else 0.0
-                show_hover_annotation(ax, f"Time: {idx}s | PPS: {pps_val:.2f} | Bandwidth: {mbps_val:.2f} Mbps", (event.xdata, event.ydata))
-                return
-
-    if ax is ax5 and port_counts:
-        for i, bar in enumerate(ax.patches):
-            if not hasattr(bar, "get_x"):
-                continue
-            contains, _ = bar.contains(event)
-            if contains:
-                svcs = list(port_counts.most_common(5))
-                if i < len(svcs):
-                    svc, cnt = svcs[i]
-                    show_hover_annotation(ax, f"Port {svc}: {cnt:,} packets", (event.xdata, event.ydata))
+        if ax is ax3 and protocol_counts:
+            for wedge, proto, count in zip(ax.patches, protocol_counts.keys(), protocol_counts.values()):
+                contains, _ = wedge.contains(event)
+                if contains:
+                    total = sum(protocol_counts.values())
+                    pct = (count / total * 100.0) if total else 0.0
+                    show_hover_annotation(ax, f"{proto}: {count:,} packets ({pct:.1f}%)", (event.xdata, event.ydata))
                     return
 
-    if ax is ax6 and alerts:
-        for txt in ax.texts:
-            if "ALERT" in txt.get_text() or "No alerts detected" in txt.get_text():
-                continue
-            contains, _ = txt.contains(event)
-            if contains:
-                latest = alerts[alert_display_index] if alerts else None
-                if latest:
-                    show_hover_annotation(ax, latest["full"], (event.xdata, event.ydata))
+        if ax is ax4 and (pps_history or mbps_history):
+            if event.xdata is not None:
+                idx = int(round(event.xdata))
+                idx = max(0, min(idx, max(len(pps_history), len(mbps_history)) - 1))
+                if idx < len(pps_history) or idx < len(mbps_history):
+                    pps_val = pps_history[idx] if idx < len(pps_history) else 0.0
+                    mbps_val = mbps_history[idx] if idx < len(mbps_history) else 0.0
+                    show_hover_annotation(ax, f"Time: {idx}s | PPS: {pps_val:.2f} | Bandwidth: {mbps_val:.2f} Mbps", (event.xdata, event.ydata))
                     return
 
-    hide_hover_annotation()
+        if ax is ax5 and port_counts:
+            for i, bar in enumerate(ax.patches):
+                if not hasattr(bar, "get_x"):
+                    continue
+                contains, _ = bar.contains(event)
+                if contains:
+                    svcs = list(port_counts.most_common(5))
+                    if i < len(svcs):
+                        svc, cnt = svcs[i]
+                        show_hover_annotation(ax, f"Port {svc}: {cnt:,} packets", (event.xdata, event.ydata))
+                        return
 
-fig.canvas.mpl_connect("motion_notify_event", _on_hover)
-# Tooltips are implemented with matplotlib annotations so they work silently
-# even when mplcursors is unavailable.
+        if ax is ax6 and alerts:
+            for txt in ax.texts:
+                if "ALERT" in txt.get_text() or "No alerts detected" in txt.get_text():
+                    continue
+                contains, _ = txt.contains(event)
+                if contains:
+                    latest = alerts[alert_display_index] if alerts else None
+                    if latest:
+                        show_hover_annotation(ax, latest["full"], (event.xdata, event.ydata))
+                        return
+
+        hide_hover_annotation()
+
+    fig.canvas.mpl_connect("motion_notify_event", _on_hover)
+    # Tooltips are implemented with matplotlib annotations so they work silently
+    # even when mplcursors is unavailable.
 
 
 
-BPF = CONFIG['capture']['bpf_filter']
+    BPF = CONFIG['capture']['bpf_filter']
 
-ani = FuncAnimation(plt.gcf(), update, interval=CONFIG['display']['update_interval_ms'],
-                    blit=False, cache_frame_data=False)
-
-print("\n" + "="*60)
-print("🔒 Network Traffic Analyzer - Enhanced Security Monitoring")
-print("="*60)
-print(f"📊 Interface: {IFACE}")
-print(f"⚙️  Configuration: {args.config}")
-print(f"🔍 Packet Filters: {'ENABLED' if CONFIG['filters']['enabled'] else 'DISABLED'}")
-print(f"⚠️  Anomaly Detection: {'ENABLED' if CONFIG['alerts']['enabled'] else 'DISABLED'}")
-print(f"📝 Logging: CSV={CONFIG['export']['csv_enabled']}, PCAP={CONFIG['export']['pcap_enabled']}")
-print("="*60)
-print("Close the dashboard window to stop capture.\n")
-
-try:
-    sniffer = AsyncSniffer(prn=capture_packet, store=False, iface=IFACE, filter=BPF)
-    sniffer.start()
-    capturing = True
-    log_event("🟢", f"Packet capture STARTED on interface: {IFACE}")
-except Exception as e:
-    print(f"⚠️  BPF filter failed: {e}")
-    print("Retrying without BPF filter...")
-    sniffer = AsyncSniffer(prn=capture_packet, store=False, iface=IFACE)
-    sniffer.start()
-    capturing = True
-    log_event("🟢", f"Packet capture STARTED on interface: {IFACE}")
-
-try:
-    # optional stop after duration
-    dur = CONFIG['capture'].get('duration_seconds')
-    if dur:
-        plt.show(block=False)
-        t0 = time.time()
-        while plt.fignum_exists(plt.gcf().number) and (time.time() - t0) < dur:
-            plt.pause(0.1)
-        plt.close()
-    else:
-        plt.show()
-finally:
-    capture_state = "STOPPED"
-    log_event("🔴", "Packet capture STOPPED")
-    try: sniffer.stop()
-    except Exception: pass
-
-    try:
-        if csv_f:
-            csv_f.flush()
-            csv_f.close()
-    except Exception: pass
-
-    try:
-        if pcap_w:
-            pcap_w.close()
-    except Exception: pass
-
-    if alerts and ALERT_LOG:
-        with open(ALERT_LOG, 'a', encoding="utf-8") as f:
-            f.write(f"\n=== Session ended: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===\n")
-            for alert in alerts:
-                f.write(f"{datetime.fromtimestamp(alert['timestamp']).strftime('%Y-%m-%d %H:%M:%S')}\n{alert['full']}\n\n")
+    ani = FuncAnimation(plt.gcf(), update, interval=CONFIG['display']['update_interval_ms'],
+                        blit=False, cache_frame_data=False)
 
     print("\n" + "="*60)
-    print("✅ Capture Session Summary")
+    print("🔒 Network Traffic Analyzer - Enhanced Security Monitoring")
     print("="*60)
-    print(f"📊 Total packets captured: {sum(source_counts.values()):,}")
-    print(f"🚫 Total packets filtered: {filtered_counter:,}")
-    print(f"💾 Total data transferred: {format_bytes(total_bytes)}")
-    print(f"⚠️  Security alerts triggered: {len(alerts)}")
-    print(f"📝 Data saved to:")
-    if CONFIG['export']['csv_enabled']:
-        print(f"   - CSV: {CSV_PATH}")
-    if CONFIG['export']['pcap_enabled']:
-        print(f"   - PCAP: {PCAP_PATH}")
-    if alerts:
-        print(f"   - Alerts: {ALERT_LOG}")
+    print(f"📊 Interface: {IFACE}")
+    print(f"⚙️  Configuration: {args.config}")
+    print(f"🔍 Packet Filters: {'ENABLED' if CONFIG['filters']['enabled'] else 'DISABLED'}")
+    print(f"⚠️  Anomaly Detection: {'ENABLED' if CONFIG['alerts']['enabled'] else 'DISABLED'}")
+    print(f"📝 Logging: CSV={CONFIG['export']['csv_enabled']}, PCAP={CONFIG['export']['pcap_enabled']}")
     print("="*60)
-    runtime = time.time() - start_time
-    runtime_str = f"{int(runtime//3600):02d}:{int((runtime%3600)//60):02d}:{int(runtime%60):02d}"
-    session_summary = f"Session Summary: {sum(source_counts.values()):,} packets | {len(alerts)} alert{'s' if len(alerts) != 1 else ''} | {runtime_str} duration"
-    log_event("📊", session_summary)
+    print("Close the dashboard window to stop capture.\n")
+
+    try:
+        sniffer = AsyncSniffer(prn=capture_packet, store=False, iface=IFACE, filter=BPF)
+        sniffer.start()
+        capturing = True
+        log_event("🟢", f"Packet capture STARTED on interface: {IFACE}")
+    except Exception as e:
+        print(f"⚠️  BPF filter failed: {e}")
+        print("Retrying without BPF filter...")
+        sniffer = AsyncSniffer(prn=capture_packet, store=False, iface=IFACE)
+        sniffer.start()
+        capturing = True
+        log_event("🟢", f"Packet capture STARTED on interface: {IFACE}")
+
+    try:
+        # optional stop after duration
+        dur = CONFIG['capture'].get('duration_seconds')
+        if dur:
+            plt.show(block=False)
+            t0 = time.time()
+            while plt.fignum_exists(plt.gcf().number) and (time.time() - t0) < dur:
+                plt.pause(0.1)
+            plt.close()
+        else:
+            plt.show()
+    finally:
+        capture_state = "STOPPED"
+        log_event("🔴", "Packet capture STOPPED")
+        try: sniffer.stop()
+        except Exception: pass
+
+        try:
+            if csv_f:
+                csv_f.flush()
+                csv_f.close()
+        except Exception: pass
+
+        try:
+            if pcap_w:
+                pcap_w.close()
+        except Exception: pass
+
+        if alerts and ALERT_LOG:
+            with open(ALERT_LOG, 'a', encoding="utf-8") as f:
+                f.write(f"\n=== Session ended: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===\n")
+                for alert in alerts:
+                    f.write(f"{datetime.fromtimestamp(alert['timestamp']).strftime('%Y-%m-%d %H:%M:%S')}\n{alert['full']}\n\n")
+
+        print("\n" + "="*60)
+        print("✅ Capture Session Summary")
+        print("="*60)
+        print(f"📊 Total packets captured: {sum(source_counts.values()):,}")
+        print(f"🚫 Total packets filtered: {filtered_counter:,}")
+        print(f"💾 Total data transferred: {format_bytes(total_bytes)}")
+        print(f"⚠️  Security alerts triggered: {len(alerts)}")
+        print(f"📝 Data saved to:")
+        if CONFIG['export']['csv_enabled']:
+            print(f"   - CSV: {CSV_PATH}")
+        if CONFIG['export']['pcap_enabled']:
+            print(f"   - PCAP: {PCAP_PATH}")
+        if alerts:
+            print(f"   - Alerts: {ALERT_LOG}")
+        print("="*60)
+        runtime = time.time() - start_time
+        runtime_str = f"{int(runtime//3600):02d}:{int((runtime%3600)//60):02d}:{int(runtime%60):02d}"
+        session_summary = f"Session Summary: {sum(source_counts.values()):,} packets | {len(alerts)} alert{'s' if len(alerts) != 1 else ''} | {runtime_str} duration"
+        log_event("📊", session_summary)
