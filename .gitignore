@@ -6,3 +6,5 @@ live_packets*.csv
 security_alerts*.log
 network_analyser.log
 packets.csv
+.claude/
+
