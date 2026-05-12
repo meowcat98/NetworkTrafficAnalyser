@@ -1,5 +1,5 @@
 """Network Traffic Visualiser and Analyzer
-Author: Your Name (Student ID: 12345678)
+Author: Shannan Farrall (Student ID: 23827528)
 University of Brighton
 Module: CI601 The Computing Project
 Date: 2026-03-10
@@ -27,7 +27,6 @@ Usage example:
     python live_dashboard.py --config custom_config.json
 """
 
-# ---------- standard library imports ----------
 import argparse
 import csv
 import json
@@ -39,7 +38,6 @@ import time
 from collections import Counter, deque, defaultdict
 from datetime import datetime
 
-# ---------- third-party imports ----------
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
@@ -55,10 +53,6 @@ try:
 except ImportError:
     winsound = None
 
-# ---------- local imports ----------
-# (none at present)
-
-# ---------- Logging setup ----------
 logger = logging.getLogger("NetworkTrafficAnalyser")
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s')
@@ -114,7 +108,6 @@ ACCENT2 = THEMES['dark']['ACCENT2']
 ACCENT3 = THEMES['dark']['ACCENT3']
 ALERT_BG = THEMES['dark']['ALERT_BG']
 
-# ---------- Command Line Arguments (MUST be before config load) ----------
 parser = argparse.ArgumentParser(description='Network Traffic Analyzer with Advanced Filtering')
 parser.add_argument('--config', default='config.json', help='Path to configuration file')
 parser.add_argument('--interface', help='Override interface from config')
@@ -122,7 +115,6 @@ parser.add_argument('--duration', type=int, help='Capture duration in seconds')
 parser.add_argument('--no-filters', action='store_true', help='Disable packet filters')
 args = parser.parse_args()
 
-# ---------- Configuration Management ----------
 DEFAULT_CONFIG = {
     "capture": {
         "interface": "auto",
@@ -264,7 +256,6 @@ def log_event(event_type, message):
 # Load configuration (default path; re-loaded with CLI args when run directly)
 CONFIG = load_config()
 
-# ---------- helpers ----------
 def short_ip(ip: str) -> str:
     """Return a possibly truncated/beautified representation of an IP.
 
@@ -398,9 +389,6 @@ def apply_packet_filter(pkt) -> bool:
     Filters include IP/port whitelists/blacklists, protocol whitelist, and
     packet size limits. If filtering is disabled in the configuration, the
     function always returns ``True``.
-
-    The logic is intentionally verbose for teaching purposes; students can
-    trace how each clause contributes to the final decision.
     """
     if not CONFIG['filters']['enabled']:
         return True
@@ -470,7 +458,6 @@ def apply_packet_filter(pkt) -> bool:
 
     return True
 
-# ---------- choose interface ----------
 IFACE_GUID = r"\Device\NPF_{4D0D7188-9E1C-40E6-8E89-948FFC10A9A6}"
 IFACE_FRIENDLY = None
 
@@ -518,14 +505,13 @@ if not IFACE:
 else:
     logger.info(f"Using interface: {IFACE}")
 
-# ---------- counters / state ----------
 source_counts = Counter()
 dest_counts = Counter()
 protocol_counts = Counter()
 port_counts = Counter()
 
 pps_history = deque(maxlen=CONFIG['display']['max_history_seconds'])
-mbps_history = deque(maxlen=CONFIG['display']['max_history_seconds'])  # ✅ bandwidth graph
+mbps_history = deque(maxlen=CONFIG['display']['max_history_seconds'])  # bandwidth graph
 
 # history for stats cards (used for trend arrows/percent)
 stat_history = {
@@ -542,7 +528,7 @@ processed_counter = 0  # total packets seen by the sniffer (including filtered)
 total_bytes = 0
 peak_pps = 0.0
 
-bytes_counter = 0  # ✅ bytes counted in the last 1-second window
+bytes_counter = 0  # bytes counted in the last 1-second window
 start_time = time.time()
 
 # performance metrics are tracked elsewhere in the dashboard state
@@ -565,7 +551,6 @@ SUSPICIOUS_PORTS_INFO = {
     5900: "VNC - Remote control service",
 }
 
-# ---------- Anomaly Detection ----------
 ip_port_tracker = defaultdict(set)
 ip_packet_rate = defaultdict(list)
 alerts = deque(maxlen=10)
@@ -704,7 +689,6 @@ def check_anomalies(src_ip, dst_port, timestamp):
             alert_cooldown[alert_key] = current_time
             logger.warning(full_msg)
 
-# ---------- persistence ----------
 session_timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 CSV_PATH = timestamped_path(CONFIG['export']['csv_path'], session_timestamp)
 PCAP_PATH = timestamped_path(CONFIG['export']['pcap_path'], session_timestamp)
@@ -731,7 +715,6 @@ if CONFIG['export']['csv_enabled']:
 if CONFIG['export']['pcap_enabled']:
     pcap_w = PcapWriter(PCAP_PATH, append=True, sync=True)
 
-# ---------- packet handler ----------
 def capture_packet(pkt):
     """Callback executed by the sniffer for every packet seen.
 
@@ -764,7 +747,7 @@ def capture_packet(pkt):
         dest_counts[dst] += 1
 
         total_bytes += pkt_len
-        bytes_counter += pkt_len  # ✅ count bytes in current 1s window
+        bytes_counter += pkt_len  # count bytes in current 1s window
 
         if TCP in pkt:
             protocol_counts["TCP"] += 1
@@ -805,7 +788,6 @@ def capture_packet(pkt):
         if packet_counter in (100, 1000, 10000):
             log_event("📊", f"Milestone: {packet_counter:,} packets captured")
 
-# ---------- styling ----------
 # apply universal rcParams for dark theme
 plt.rcParams.update({
     "figure.facecolor": DARK_BG,
@@ -866,7 +848,6 @@ def style_card(ax, theme_colors=None):
 
 plt.rcParams.update({"figure.autolayout": False})
 
-# ---------- Animation State Tracking ----------
 # store previous data for smooth transitions
 prev_source_data = {}
 prev_dest_data = {}
@@ -1001,7 +982,6 @@ def get_capture_status_style():
         return "🔴 STOPPED", "#ff3333"
     return "🟢 CAPTURING", "#00ff88"
 
-# ---------- rendering ----------
 reset_flash_until = 0.0
 about_overlay_visible = False
 
@@ -1024,7 +1004,7 @@ def update(_frame):
         now = time.time()
         elapsed = now - last_time
         pps = packet_counter / max(elapsed, 1e-6)
-        mbps = (bytes_counter * 8) / (elapsed * 1_000_000)  # ✅ Mbps
+        mbps = (bytes_counter * 8) / (elapsed * 1_000_000)  # Mbps
 
         pps_history.append(pps)
         mbps_history.append(mbps)
@@ -1594,7 +1574,6 @@ def update(_frame):
             ),
         )
     
-    # ---------- Update animation state for next frame ----------
     # save current state for smooth interpolation in next frame
     if source_counts:
         prev_source_data = {ip: count for ip, count in source_counts.most_common(5)}
@@ -1617,7 +1596,6 @@ if __name__ == '__main__':
         CONFIG['capture']['duration_seconds'] = args.duration
         logger.info(f"CLI override: duration set to {args.duration}s")
 
-    # ---------- run ----------
     fig = plt.figure(figsize=(CONFIG['display']['window_width'], CONFIG['display']['window_height']))
     fig.patch.set_facecolor(DARK_BG)
 

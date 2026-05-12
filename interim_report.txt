@@ -1,0 +1,76 @@
+Shannan FarrallThe University of Brighton23827528CI601 InTERIM REPORTCI601 The Computing Project
+Shannan Farrall
+The University of Brighton23827528
+CI601 InTERIM REPORT
+CI601 The Computing Project
+1. Introduction
+Network security and cybersecurity analysis rely heavily on the ability to observe, interpret, and understand network traffic behaviour. While professional network monitoring tools such as packet analysers provide powerful functionality, they often present information in a complex and technical manner that can be difficult for students and analysts to interpret. This creates a learning barrier when developing practical cybersecurity skills.
+This project focuses on the design and implementation of a Network Traffic Visualiser that aims to present network traffic data in a clear, visual, and accessible way. The system is intended to support cybersecurity education and entry-level analysis by enabling users to observe traffic patterns, understand protocol behaviour, and identify potential anomalies through visual representations rather than raw packet data.
+I chose to work on this type of project because it sparked my interest in network security and the inside look on how networks communicate in real – time, showing what is going on in the background when a user is simply opening for example, Google tabs, YouTube and websites alike, how they are communicating behind the scenes and the amount of traffic going on.This interim report outlines the planned aims and objectives, requirements, development approach, project plan, risks, and initial research.
+2. Aim and Objectives
+2.1 Aim
+This project aimsto design and implement a Network Traffic Visualiser that supports cybersecurity learning and analysis by presenting network traffic data through cleargraphs with Matplotlib.
+2.2 Objectives
+The objectives of this project are:
+To investigate existing network monitoring and traffic visualisation tools.
+To identify functional and non-functional requirements for a network traffic visualisation system.
+To design a clear and intuitive user interface for visualising network traffic data.
+To implement a prototype capable of capturing or simulating network traffic data.
+To develop visualisations that display traffic characteristics such as volume, protocol, and source/destination.
+To test the system against defined functional requirements.
+To evaluate the effectiveness of the system in supporting network traffic analysis.
+3. Project Requirements
+3.1 User Characteristics
+The main users I'm targeting are undergraduate computing and cybersecurity students, as well as people just starting out in network security. They'll likely have basic networking knowledge - things like IP addresses and common protocols - but probably haven't used professional network analysis tools much. Because of this, I need to focus on making the system clear and simple, rather than adding lots of advanced configuration options.
+3.2 Functional Requirements
+Must Have:
+The system must display network traffic data in a graphical format.
+The system must allow users to view traffic volume over time.
+The system must identify and display common network protocols.
+The system must allow basic filtering of traffic data.
+Should Have:
+The system should highlight unusual or potentially suspicious traffic patterns.
+The system should allow users to pause and resume data visualisation.
+Nice to Have:
+The system may allow exporting visualisation data or screenshots.
+The system may support multiple visualisation styles.
+3.3 Non-Functional Requirements
+Usability:The interface should be intuitive and easy to understand for novice users.
+Performance:The system should update visualisations in near real-time.
+Reliability:The system should operate consistently without crashes during normal use.
+Security:The system should avoid storing sensitive network data.
+Maintainability:The codebase should be well-structured and documented.
+4. Deliverables
+The planned deliverables for this project include:
+Interim Planning and Investigation Report
+Final Project Report
+System requirements specification
+Design diagrams and visualisation models
+Implemented Network Traffic Visualiser prototype
+Test plan and test results
+User documentation
+Source code and supporting files
+5. Chosen Approach
+I'm taking an iterative and incremental development approach for this project. This method works well for projects like mine that involve exploration and technical challenges, since I can build and test the core features early on, then refine them based on how the testing goes. By focusing first on the essential parts - traffic capture and visualisation - I'm reducing risk and keeping the project manageable.
+Therefore, Ilooked at existing network analysis tools like Wireshark to understand how they capture and display network traffic. These tools are powerful, but they show data in a very technical way, which confirmed my decision to create something more simplified and educational with visual representations that are easier to understand.
+I selected Matplotlib as my main visualisation library because it's flexible and good at generating clear graphs of network traffic data, which fits with my focus on making the system usable and easy to understand.
+6. Project Plan and Schedule
+6.1 Development Plan
+For the project I willbe following a structured development plan based on agile principles. I'm breaking the work into clear stages, each producing something measurable like requirement specs, design documents, implemented features, or evaluation results. This approach helps me track progress and keeps development aligned with my objectives.
+6.2Schedule Phases
+A screenshot of a computer screen
+
+AI-generated content may be incorrect.
+Figure1Project development schedule outlining planned and completed phases of the Network Traffic Visualiser.
+6.3 Risk Analysis
+A screenshot of a screen
+
+AI-generated content may be incorrect.
+Figure2Risk analysis identifying potential project risks and mitigation strategies for the Network Traffic Visualiser.
+7. Research and Literature Review
+For my project, I havedone initial research into network monitoring, traffic analysis, and visual analytics to help guide my project design. From what I've read, visualisation techniques are effective for spotting anomalies and helping users understand complex network behaviour. I looked particularly at tools like Wireshark, which show industry-standard approaches to packet capture and traffic analysis. While these tools are powerful, their complexity can be challenging for beginners, which reinforced my decision to focus on creating something more accessible. I've also researched data visualisation libraries like Matplotlib, which will help me create clear graphical representations of the network traffic data.
+8. Conclusion
+This interim report has outlined my planned approach for the Network Traffic Visualiser project, including the aims, objectives, requirements, development strategy, and risks I've identified. I believe the project is feasible within the available timeframe and scope. The next phase of my work will focus on detailed design and initial implementation of the visualisation prototype.
+References
+Wireshark Foundation.Wireshark Network Protocol Analyzer.
+Hunter, J.D. et al. Matplotlib: A 2D Graphics Environment.
